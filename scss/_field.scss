@@ -1,0 +1,23 @@
+.field{
+
+  &-select {
+      min-width: 300px;
+    }
+
+  &-wrapper{
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+}
+
+@media (max-width: 480px){
+  .field {
+  
+      &-wrapper {
+        flex-direction: column;
+      }
+  
+    }
+}
