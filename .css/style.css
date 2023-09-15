@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&family=Russo+One&display=swap");
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 /* Document
    ========================================================================== */
@@ -341,11 +342,6 @@ template {
   box-sizing: border-box;
 }
 
-#root {
-  padding: 50px 10% 50px;
-  text-align: center;
-}
-
 h1,
 h2,
 h3,
@@ -359,17 +355,115 @@ h6 {
   margin-bottom: 40px;
 }
 
-.field-select {
-  min-width: 300px;
+.constructor {
+  padding: 10vw;
+  text-align: center;
 }
-.field-wrapper {
+.constructor__title {
+  margin-bottom: 50px;
+  font-family: "Russo One";
+  font-style: normal;
+  font-weight: normal;
+  font-size: 25px;
+  line-height: 28px;
+  color: #000000;
+}
+.constructor__fields {
   display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.constructor__button {
+  margin-top: 20px;
+  background-color: #d9760f;
+  padding: 13px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 15px;
+  color: #ffffff;
+  text-transform: uppercase;
+  border: none;
+  outline: none;
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+}
+.constructor__button:hover, .constructor__button:focus {
+  background-color: #e78826;
+}
+.constructor__result {
+  display: inline-block;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  color: #000000;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 25px;
+  line-height: 28px;
+}
+.constructor__card {
+  display: flex;
+  padding: 20px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  border-radius: 4px;
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+.constructor__card_noResult {
+  flex-direction: column;
+}
+.constructor__name-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+}
+.constructor__img {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
+}
+.constructor__link {
+  font-family: "Russo One";
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 18px;
+  color: #0a0a0a;
+  text-transform: uppercase;
+  text-decoration-color: #d9760f;
+}
+.constructor__value-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 50%;
+  padding: 10px;
+}
+.constructor__value {
+  font-family: Roboto;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0a0a0a;
 }
 
-@media (max-width: 480px) {
-  .field-wrapper {
+@media screen and (max-width: 1230px) {
+  .constructor__fields {
     flex-direction: column;
   }
-}/*# sourceMappingURL=style.css.map */
+}
+@media screen and (max-width: 740px) {
+  .constructor__card {
+    flex-direction: column;
+  }
+  .constructor__name-wrap, .constructor__value-wrap {
+    width: 100%;
+  }
+  .constructor__value-wrap {
+    align-items: center;
+  }
+}

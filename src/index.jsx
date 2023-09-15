@@ -1,63 +1,91 @@
 import React, { useState, useContext } from 'react';
 
-import { Typography, Button, Card, Link } from '@mui/material';
-import FieldUserDataForProp from './components/FieldUserDataForProp/FieldUserDataForProp'
-import FieldUserDataThreeProp from './components/FieldUserDataThreeProp/FieldUserDataThreeProp'
-import FieldUserDataTwoProp from './components/FieldUserDataTwoProp/FieldUserDataTwoProp'
+import FieldUserDataProp from './components/FieldUserDataProp/FieldUserDataProp'
 
 import DBDisposers from '../db'
 import Context from './context'
 
 const Wrapper = () => {
+  const defoultContext = useContext(Context)
+  const [context, setContext] = useState(defoultContext)
+  const [result, setResult] = useState([])
 
-  const defoultContext = useContext(Context);
-  const [context, setContext] = useState(defoultContext);
+  const comfortWeightDisposers = DBDisposers.map(item => {
+    let sum = Number(item.soundProofingBoolean) + Number(item.quietStart) + Number(item.autoWater) + Number(item.autoPowerOff)
+    if (sum == 0 || sum == 1) {
+      item.comfort = 'Стандарт'
+      return item
+    } else if (sum == 2) {
+      item.comfort = 'Комфорт'
+      return item
+    } else {
+      item.comfort = 'Ультра Комфорт'
+      return item
+    }
+  })
 
-  const [result, setResult] = useState([]);
-
-  const handleSubmit = (event) => {
+  const getModel = (event) => {
     event.preventDefault()
 
     const query2 = context
-    const queryKeys = Object.keys(context);
+    const queryKeys = Object.keys(context)
 
-    const filteredArray = DBDisposers.filter((product) => {
+    const filteredArray = comfortWeightDisposers.filter((product) => {
       return queryKeys.every((key) => {
-        return product[key] == query2[key];
-      });
-    });
+        return product[key] == query2[key]
+      })
+    })
 
-    const itemDisposers = filteredArray.map((item) =>
-      <Card sx={{ marginBottom: 2 }}>
-        <Typography variant="h5" color="primary" sx={{ marginBottom: 1 }}>{item.model}</Typography>
-        <Link href={item.link} target='_blank' variant="h6" color="primary" sx={{ marginBottom: 1 }}>{item.link}</Link>
-        <Typography variant="body2" color="secondary" sx={{ marginBottom: 1 }}>Мощность: {item.power}</Typography>
-        <Typography variant="body2" color="secondary" sx={{ marginBottom: 1 }}>Объем камеры: {item.volume} мл</Typography>
-        <Typography variant="body2" color="secondary" sx={{ marginBottom: 1 }}>Размер: {item.size} мм</Typography>
-      </Card>
-    )
-    setResult(itemDisposers)
+    if (filteredArray.length === 0) {
+      const noResult = () =>{
+        return(
+          <div className='constructor__card constructor__card_noResult'>
+            <span className='constructor__value'>Увы, соотвествий не найдено!</span>
+            <span className='constructor__value'>Попробуйте изменить параметры...</span>
+          </div>
+        )
+        }
+      setResult(noResult)
+    } else {
+      const itemDisposers = filteredArray.map((item, index) =>
+        <div className='constructor__card' key={index}>
+          <div className='constructor__name-wrap'>
+            <img className='constructor__img' src={item.image} alt={item.model} />
+            <a href={item.link} target='_blank' className='constructor__link'>BORT {item.model}</a>
+            <button className='constructor__button' type="button" onClick={() => { location.href = item.link }}>Перейти</button>
+          </div>
+          <div className='constructor__value-wrap'>
+            <span className='constructor__value'>Мощность: {item.power}</span>
+            <span className='constructor__value'>Объем камеры: {item.volume} мл</span>
+            <span className='constructor__value'>Размер: {item.size} мм</span>
+            <span className='constructor__value'>Шумоизоляция: {item.soundProofing}</span>
+            <span className='constructor__value'>Тихий запуск: {item.quietStart ? 'есть' : 'нет'}</span>
+            <span className='constructor__value'>Управление: {item.control}</span>
+            <span className='constructor__value'>Автоподача воды: {item.autoWater ? 'есть' : 'нет'}</span>
+          </div>
+        </div>
+      )
+      setResult(itemDisposers)
+    }
+
+
   };
-
 
   return (
     <Context.Provider value={[context, setContext]}>
-      <Typography variant="h2" color="primary" sx={{ marginBottom: 6 }}>Прототип конструктора подбора модели</Typography>
-      <form className="field-form" onSubmit={handleSubmit}>
-        <div className='field-wrapper'>
-          <FieldUserDataForProp propLabelId='power-id' propLabel='Мощность' propValueOne='390 Вт' propValueTwo='560 Вт' propValueThree='750 Вт' propValueFor='780 Вт' />
-          <FieldUserDataThreeProp propLabelId='quantity-id' propLabel='Количество человек в семье' propValueOne='1 - 3 чел' propValueTwo='4 - 6 чел' propValueThree='6 - 8 чел' />
-          <FieldUserDataTwoProp propLabelId='diameter-id' propLabel='Диаметр сливного отверстия' propValueOne='90 - 94 мм' propValueTwo='более 94 мм' />
-          <FieldUserDataTwoProp propLabelId='control-id' propLabel='Управление' propValueOne='пневмокнопка' propValueTwo='беспроводная кнопка' />
-          <FieldUserDataThreeProp propLabelId='soundproofing-id' propLabel='Шумоизоляция' propValueOne='полная' propValueTwo='частичная' propValueThree='нет' />
-          <FieldUserDataTwoProp propLabelId='reverce-id' propLabel='Автореверс' propValueOne='да' propValueTwo='нет' />
-          <FieldUserDataTwoProp propLabelId='booster-id' propLabel='Усилитель мощности' propValueOne='да' propValueTwo='нет' />
-        </div>
-        <Button variant="contained" type="submit" sx={{ marginTop: 6 }}>Подобрать</Button>
-      </form>
-
-      <Typography variant="h5" color="primary" sx={{ marginTop: 6, marginBottom: 6 }}>Вам подойдут модели...</Typography>
-      <div className="result-wrapper">{result}</div>
+      <div className="constructor">
+        <h3 className='constructor__title'>Подбор модели измельчителя</h3>
+        <form onSubmit={getModel}>
+          <div className='constructor__fields'>
+            <FieldUserDataProp propLabelId='quantity-id' propLabel='Количество человек в семье' propValueOne='1 - 3 человек' propValueTwo='4 - 6 человек' propValueThree='6 - 8 человек' />
+            <FieldUserDataProp propLabelId='size-id' propLabel='Размер измельчителя' propValueOne='Малый' propValueTwo='Средний' propValueThree='Большой' />
+            <FieldUserDataProp propLabelId='comfort-id' propLabel='Комфорт использования' propValueOne='Стандарт' propValueTwo='Комфорт' propValueThree='Ультра Комфорт' />
+          </div>
+          <button className='constructor__button' type="submit">Подобрать</button>
+        </form>
+        <span className='constructor__result'>Вам подойдут модели...</span>
+        <div>{result}</div>
+      </div>
     </Context.Provider>
   );
 
